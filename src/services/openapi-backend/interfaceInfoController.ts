@@ -79,8 +79,8 @@ export async function listInterfaceInfoByPageUsingGET(
 
 /** updateInterfaceInfo POST /api/interfaceInfo/update */
 export async function updateInterfaceInfoUsingPOST(
-  body: API.InterfaceInfoUpdateRequest,
-  options?: { [key: string]: any },
+  body: { idDelete?: number; method?: string; createTime?: string; createId?: number; name?: string; responseHeader?: string; description?: string; requestHeader?: string; updateTime?: string; id: any | number; url?: string; status?: number },
+  options?: { [p: string]: any },
 ) {
   return request<API.BaseResponseboolean>('/api/interfaceInfo/update', {
     method: 'POST',
