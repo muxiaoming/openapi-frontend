@@ -1,7 +1,11 @@
 import { PageContainer } from '@ant-design/pro-components';
 import React, { useEffect, useState } from 'react';
-import { List, message } from 'antd';
-import { listInterfaceInfoByPageUsingGET } from '@/services/openapi-backend/interfaceInfoController';
+import {Card, Descriptions, List, message} from 'antd';
+import {
+  getInterfaceInfoByIdUsingGET,
+  listInterfaceInfoByPageUsingGET
+} from '@/services/openapi-backend/interfaceInfoController';
+import {useMatch, useParams} from "@@/exports";
 
 /**
  * 主页
@@ -9,18 +13,19 @@ import { listInterfaceInfoByPageUsingGET } from '@/services/openapi-backend/inte
  */
 const Index: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [list, setList] = useState<API.InterfaceInfo[]>([]);
-  const [total, setTotal] = useState<number>(0);
-
-  const loadData = async (current = 1, pageSize = 10) => {
+  const [data, setData] = useState<API.InterfaceInfo>();
+  const params = useParams();
+  const loadData = async () => {
+    if (!params.id){
+      message.error('参数不存在');
+      return;
+    }
     setLoading(true);
     try {
-      const res = await listInterfaceInfoByPageUsingGET({
-        current,
-        pageSize,
+      const res = await getInterfaceInfoByIdUsingGET({
+        id: Number(params.id),
       });
-      setList(res?.data?.records ?? []);
-      setTotal(res?.data?.total ?? 0);
+      setData(res.data)
       setLoading(false);
     } catch (e: any) {
       message.error('请求失败.' + e.message);
@@ -33,31 +38,22 @@ const Index: React.FC = () => {
 
   return (
     <PageContainer title="在线接口开放平台">
-      <List
-        className="my-list"
-        loading={loading}
-        itemLayout="horizontal"
-        dataSource={list}
-        renderItem={(item) => (
-          <List.Item actions={[<a key="list-loadmore-edit">查看</a>]}>
-            <List.Item.Meta
-              title={<a href="https://ant.design">{item.name}</a>}
-              description={item.description}
-            />
-          </List.Item>
+      <Card>
+        {data ? (
+          <Descriptions title={data.name} column={1}>
+            <Descriptions.Item label="接口状态">{data.status ? '开启' : '关闭'}</Descriptions.Item>
+            <Descriptions.Item label="描述">{data.description}</Descriptions.Item>
+            <Descriptions.Item label="请求地址">{data.url}</Descriptions.Item>
+            <Descriptions.Item label="请求方法">{data.method}</Descriptions.Item>
+            <Descriptions.Item label="请求头">{data.requestHeader}</Descriptions.Item>
+            <Descriptions.Item label="响应头">{data.responseHeader}</Descriptions.Item>
+            <Descriptions.Item label="创建时间">{data.createTime}</Descriptions.Item>
+            <Descriptions.Item label="更新时间">{data.updateTime}</Descriptions.Item>
+          </Descriptions>
+        ) : (
+          <>接口不存在</>
         )}
-        pagination={{
-          // eslint-disable-next-line @typescript-eslint/no-shadow
-          showTotal(total: number){
-            return '总数: ' + total;
-          },
-          pageSize: 10,
-          total,
-          onChange(page, pageSize) {
-            loadData(page, pageSize);
-          },
-        }}
-      />
+      </Card>
     </PageContainer>
   );
 };

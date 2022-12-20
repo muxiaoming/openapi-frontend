@@ -2,10 +2,8 @@ import { PageContainer } from '@ant-design/pro-components';
 import React, { useEffect, useState } from 'react';
 import { List, message } from 'antd';
 import {
-  getInterfaceInfoByIdUsingGET,
   listInterfaceInfoByPageUsingGET
 } from '@/services/openapi-backend/interfaceInfoController';
-import {getLoginUserUsingGET} from "@/services/openapi-backend/userController";
 
 /**
  * 主页
@@ -13,17 +11,22 @@ import {getLoginUserUsingGET} from "@/services/openapi-backend/userController";
  */
 const Index: React.FC = () => {
   const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<API.InterfaceInfo>();
+  const [list, setList] = useState<API.InterfaceInfo[]>([]);
+  const [total, setTotal] = useState<number>(0);
 
   const loadData = async (current = 1, pageSize = 10) => {
     setLoading(true);
     try {
-      const res = await getInterfaceInfoByIdUsingGET(id);
-      setData(res.data)
-      setLoading(false);
+      const res = await listInterfaceInfoByPageUsingGET({
+        current,
+        pageSize
+      });
+      setList(res?.data?.records ?? []);
+      setTotal(res?.data?.total ?? 0);
     } catch (e: any) {
       message.error('请求失败.' + e.message);
     }
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -38,7 +41,9 @@ const Index: React.FC = () => {
         itemLayout="horizontal"
         dataSource={list}
         renderItem={(item) => {
-          const apiLink = '/interface_info/${item.id}';
+          //不是使用单引号,而是使用(`)飘号
+          const apiLink = `/interface_info/${item.id}`;
+          //const apiLink = '/interface_info/${item.id}';
           return <List.Item actions={[<a key={item.id} href={apiLink}>查看</a>]}>
             <List.Item.Meta
               title={<a href={apiLink}>{item.name}</a>}
