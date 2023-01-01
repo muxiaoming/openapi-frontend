@@ -24,6 +24,7 @@ const UpdateModal: React.FC<Props> = (props) => {
   },[values])
   return (
     <Modal visible={visible} footer={null} onCancel={() => onCancel?.()}>
+    {/*  {JSON.stringify(values)}*/}
       <ProTable
         type="form"
         columns={columns}

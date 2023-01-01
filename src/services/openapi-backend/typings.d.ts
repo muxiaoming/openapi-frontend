@@ -98,6 +98,7 @@ declare namespace API {
     createId?: number;
     createTime?: string;
     description?: string;
+    requestParams?: string;
     id?: number;
     idDelete?: number;
     method?: string;
@@ -113,6 +114,7 @@ declare namespace API {
     description?: string;
     method?: string;
     name?: string;
+    requestParams?: string;
     requestHeader?: string;
     responseHeader?: string;
     status?: number;
@@ -123,6 +125,7 @@ declare namespace API {
     description?: string;
     id?: number;
     method?: string;
+    requestParams?: string;
     name?: string;
     requestHeader?: string;
     responseHeader?: string;
