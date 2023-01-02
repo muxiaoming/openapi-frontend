@@ -1,8 +1,8 @@
 import { PageContainer } from '@ant-design/pro-components';
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Descriptions, Form, Input, message } from 'antd';
+import {Button, Card, Descriptions, Divider, Form, Input, message} from 'antd';
 import {
-  getInterfaceInfoByIdUsingGET,
+  getInterfaceInfoByIdUsingGET, invokeInterfaceInfoUsingPOST, updateInterfaceInfoUsingPOST,
 } from '@/services/openapi-backend/interfaceInfoController';
 import {useParams} from "@@/exports";
 
@@ -13,6 +13,9 @@ import {useParams} from "@@/exports";
 const Index: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState<API.InterfaceInfo>();
+  const [invokeRes, setInvokeRes] = useState<any>();
+  const [invokeLoading, setInvokeLoading] = useState(false);
+
   const params = useParams();
   const loadData = async () => {
     if (!params.id){
@@ -35,8 +38,24 @@ const Index: React.FC = () => {
     loadData();
   }, []);
 
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  const onFinish = async (values: any) => {
+    if (!params.id) {
+      message.error('接口不存在');
+      return;
+    }
+    setInvokeLoading(true);
+    try {
+      const res = await invokeInterfaceInfoUsingPOST({
+        id: params.id,
+        ...values
+      })
+      setInvokeRes(res.data);
+      message.success('Requesting is successful');
+      return true;
+    } catch (error: any) {
+      message.error('Requesting failed, please try again!' + error.message);
+    }
+    setInvokeLoading(false);
   };
 
   return (
@@ -58,7 +77,8 @@ const Index: React.FC = () => {
           <>接口不存在</>
         )}
       </Card>
-      <Card>
+      <Divider/>
+      <Card title="在线测试">
         <Form
           name="invoke"
           layout="vertical"
@@ -66,7 +86,7 @@ const Index: React.FC = () => {
         >
           <Form.Item
             label="请求参数"
-            name="requestParams"
+            name="userRequestParams"
            /* rules={[{ required: true, message: 'Please input your username!' }]}*/
           >
             <Input.TextArea/>
@@ -77,6 +97,10 @@ const Index: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
+      </Card>
+      <Divider/>
+      <Card title="返回结果">
+        {invokeRes}
       </Card>
     </PageContainer>
   );
