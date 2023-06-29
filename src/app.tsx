@@ -34,7 +34,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
   return {
     rightContentRender: () => <RightContent />,
     waterMarkProps: {
-      content: initialState?.loginUser?.userName,
+      content: '周子琪_' + initialState?.loginUser?.userName,
     },
     footerRender: () => <Footer />,
     onPageChange: () => {

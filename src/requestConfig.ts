@@ -25,13 +25,13 @@ interface ResponseStructure {
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const requestConfig: RequestConfig = {
-  baseURL: 'http://localhost:8080/',
+  baseURL: 'http://localhost:8070',
   withCredentials: true,
   // 请求拦截器
   requestInterceptors: [
     (config: RequestOptions) => {
       // 拦截请求配置，进行个性化处理。
-      const url = config?.url?.concat('?token = 123');
+      const url = config?.url?.concat('?token = zhouziqi');
       return { ...config, url };
     },
   ],

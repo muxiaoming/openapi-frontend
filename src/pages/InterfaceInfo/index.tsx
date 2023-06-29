@@ -89,7 +89,7 @@ const Index: React.FC = () => {
             name="userRequestParams"
            /* rules={[{ required: true, message: 'Please input your username!' }]}*/
           >
-            <Input.TextArea/>
+            <Input.TextArea placeholder={'{"username":zhangsan}'}/>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">

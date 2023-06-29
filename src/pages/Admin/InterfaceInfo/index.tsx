@@ -123,12 +123,12 @@ const TableList: React.FC = () => {
         id: record.id
       });
       hide();
-      message.success('Online successfully and will refresh soon');
+      message.success('Offline successfully and will refresh soon');
       actionRef.current?.reload();
       return true;
     } catch (error: any) {
       hide();
-      message.error('Online failed, please try again' + error.message);
+      message.error('Offline failed, please try again' + error.message);
       return false;
     }
   };
@@ -188,7 +188,26 @@ const TableList: React.FC = () => {
     {
       title: '请求方法',
       dataIndex: 'method',
-      valueType: 'text',
+      //valueType: 'text',
+      valueEnum: {
+        // 前面的枚举值是传给后端的值
+        GET: {
+          text: 'GET',
+          status: 'Default',
+        },
+        POST: {
+          text: 'POST',
+          status: 'Processing',
+        },
+        PUT: {
+          text: 'PUT',
+          status: 'Processing',
+        },
+        DELETE: {
+          text: 'DELETE',
+          status: 'Processing',
+        },
+      },
     },
     {
       title: '请求地址',

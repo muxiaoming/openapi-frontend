@@ -124,4 +124,5 @@ export default defineConfig({
   mfsu: {
     exclude: ['@playwright/test'],
   },
+  exportStatic: {},
 });
